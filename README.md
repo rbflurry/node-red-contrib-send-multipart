@@ -1,8 +1,8 @@
-# node-red-contrib-http-send-multipart
-This is a node-red node for posting http(s) requests with multipart formData
+# node-red-contrib-send-multipart
+This is a node-red node for posting http(s) requests with multipart formData. Currently a work in progress!
 
 ## Installation
-run npm -g install node-red-contrib-http-send-multipart
+run npm -g install node-red-contrib-send-multipart
 
 <!-- [![npm package](https://nodei.co/npm/node-red-contrib-http-request.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/node-red-contrib-http-request/) -->
 
