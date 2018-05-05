@@ -1,0 +1,22 @@
+{
+  "name": "red-contrib-http-send-multipart",
+  "version": "0.0.1",
+  "description": "NodeRed node for posting multipart form data to external sites",
+  "main": "httpSendMultipart.js",
+  "scripts": {
+    "test": "boop"
+  },
+  "repository": {
+    "type": "git",
+    "url": "TBD"
+  },
+  "keywords": [
+    "node",
+    "red",
+    "multipart",
+    "http",
+    "formdata"
+  ],
+  "author": "Allie Southerland",
+  "license": "ISC"
+}
