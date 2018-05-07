@@ -1,0 +1,118 @@
+<script type="text/x-red" data-template-name="http-send-multipart">
+	<div class="form-row">
+		<label for="node-input-method"><i class="fa fa-tasks"></i> <span data-i18n="http-send-multipart.label.method">Method</span></label>
+		<select type="text" id="node-input-method" style="width:72%;">
+        <option value="post">POST</option>
+        <option value="put">PUT</option>
+        </select>
+	</div>
+	<div class="form-row">
+		<label for="node-input-url"><i class="fa fa-globe"></i> <span data-i18n="http-send-multipart.label.url">Url</span></label>
+		<input type="text" id="node-input-url" placeholder="/url">
+	</div>
+	<div class="form-row">
+		<label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name">Name</span></label>
+		<input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+	</div>
+	<div class="form-row">
+		<label for="node-input-fields"><i class="fa fa-wpforms"></i> <span data-i18n="http-send-multipart.label.fields">Fields</span></label>
+		<input type="text" id="node-input-fields" placeholder='[ {"name": "field1", "maxCount": 8}]'>
+	</div>
+	<div class="form-row row-swagger-doc">
+		<label for="node-input-swaggerDoc"><i class="fa fa-file-text-o"></i> <span data-i18n="http-send-multipart.label.doc">Swagger Docs</span></label>
+		<input type="text" id="node-input-swaggerDoc">
+	</div>
+  <div class="form-row">
+		<label for="node-output-fields"><i class="fa fa-wpforms"></i> <span data-i18n="http-send-multipart.label.fields">Output Fields</span></label>
+		<input type="text" id="node-output-fields" placeholder='[ {"name": "field1", "maxCount": 8}]'>
+	</div>
+	<div class="form-row row-swagger-doc">
+		<label for="node-out-swaggerDoc"><i class="fa fa-file-text-o"></i> <span data-i18n="http-send-multipart.label.doc">Swagger Docs</span></label>
+		<input type="text" id="node-output-swaggerDoc">
+	</div>
+	<div id="node-input-tip" class="form-tips"><span data-i18n="http-send-multipart.tip.in"></span><code><span id="node-input-path"></span></code>.</div>
+  <div id="node-output-tip" class="form-tips"><span data-i18n="http-send-multipart.tip.out"></span><code><span id="node-output-path"></span></code>.</div>
+</script>
+
+<script type="text/x-red" data-help-name="http-send-multipart">
+	<p>Provides an output node for http POST requests that contain multi-part data, including files.</p>
+	<p>The resulting message has the following properties:
+		<ul>
+			<li>msg.req : <a href="http://expressjs.com/api.html#req">http request</a></li>
+			<li>msg.res : <a href="http://expressjs.com/api.html#res">http response</a></li>
+		</ul>
+	</p>
+	<p>
+		The "fields" section contains an array of key / value pairs which with the following format:
+		<pre>[{ "name": "<field name>"}]</pre>
+	</p>
+
+</script>
+
+
+<script type="text/javascript">
+	RED.nodes.registerType('http-send-multipart', {
+		category: 'function',
+		color: "rgb(231, 231, 174)",
+		defaults: {
+			name: {
+				value: ""
+			},
+			url: {
+				value: "",
+				required: true
+			},
+			method: {
+				value: "POST",
+				required: true
+			},
+			fields: {
+				value: "",
+				required: true
+			},
+			swaggerDoc: {
+				type: "swagger-doc",
+				required: false
+			}
+		},
+		inputs: 1,
+		outputs: 1,
+		icon: "white-globe.png",
+		label: function() {
+			if (this.name) {
+				return this.name;
+			} else if (this.url) {
+				var root = RED.settings.httpNodeRoot;
+				if (root.slice(-1) != "/") {
+					root = root + "/";
+				}
+				if (this.url.charAt(0) == "/") {
+					root += this.url.slice(1);
+				} else {
+					root += this.url;
+				}
+				return "[" + this.method + "] " + root;
+			} else {
+				return "http";
+			}
+		},
+		labelStyle: function() {
+			return this.name ? "node_label_italic" : "";
+		},
+		oneditprepare: function() {
+			var root = RED.settings.httpNodeRoot;
+			if (root.slice(-1) == "/") {
+				root = root.slice(0, -1);
+			}
+
+			$("#node-input-path").html(root);
+			$("#node-input-tip").show();
+			$("#node-output-tip").show();
+
+			if (!RED.nodes.getType("swagger-doc")) {
+				$('.row-swagger-doc').hide();
+			}
+		}
+
+	});
+</script>
