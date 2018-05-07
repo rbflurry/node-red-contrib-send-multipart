@@ -81,19 +81,8 @@
 		label: function() {
 			if (this.name) {
 				return this.name;
-			} else if (this.url) {
-				var root = RED.settings.httpNodeRoot;
-				if (root.slice(-1) != "/") {
-					root = root + "/";
-				}
-				if (this.url.charAt(0) == "/") {
-					root += this.url.slice(1);
-				} else {
-					root += this.url;
-				}
-				return "[" + this.method + "] " + root;
 			} else {
-				return "http";
+				return "httpSendMultipart";
 			}
 		},
 		labelStyle: function() {
