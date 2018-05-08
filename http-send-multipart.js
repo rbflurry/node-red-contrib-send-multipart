@@ -2,12 +2,13 @@
 let cors = require('cors');
 let FormData = require('form-data'),
 	mustache = require('mustache'),
-	restler = require('restler'),
+	http = require('http'),
+	https = require('https'), // NOTE: consider using request.js instead?
 	fs = require('fs');
 
 module.exports = function(RED) {
 
-	function httpSendMultipart() {
+	function httpSendMultipart(n) {
 		// Setup node
 		RED.nodes.createNode(this, n);
 		var node = this;
@@ -103,9 +104,9 @@ module.exports = function(RED) {
 
 			var request;
 			if (url.indexOf('https://') > -1) {
-				request = https(opts);
+				request = https.request(opts);
 			} else {
-				request = http(opts);
+				request = http.request(opts);
 			}
 
 			// 3) Send POST request to endpoint

@@ -2,3 +2,6 @@
 - renamed all files to lower case
 0.0.8
 - fixed silly syntax errors in main js file
+0.0.10
+- initial setup of request
+- no more being babies
