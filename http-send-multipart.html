@@ -14,14 +14,20 @@
 		<label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name">Name</span></label>
 		<input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
 	</div>
-	<div class="form-row row-swagger-doc">
-		<label for="node-input-swaggerDoc"><i class="fa fa-file-text-o"></i> <span data-i18n="http-send-multipart.label.doc">Swagger Docs</span></label>
-		<input type="text" id="node-input-swaggerDoc">
-	</div>
-	<div class="form-row row-swagger-doc">
-		<label for="node-out-swaggerDoc"><i class="fa fa-file-text-o"></i> <span data-i18n="http-send-multipart.label.doc">Swagger Docs</span></label>
-		<input type="text" id="node-output-swaggerDoc">
-	</div>
+	<div class="form-row">
+		<input type="checkbox" id="node-input-useAuth" style="display: inline-block; width: auto; vertical-align: top;">
+		<label for="node-input-useAuth" style="width: 70%;"><span data-i18n="httpin.basicauth"></span></label>
+		<div style="margin-left: 20px" class="node-input-useAuth-row hide">
+				<div class="form-row">
+						<label for="node-input-user"><i class="fa fa-user"></i> <span data-i18n="common.label.username"></span></label>
+						<input type="text" id="node-input-user">
+				</div>
+				<div class="form-row">
+						<label for="node-input-password"><i class="fa fa-lock"></i> <span data-i18n="common.label.password"></span></label>
+						<input type="password" id="node-input-password">
+				</div>
+		</div>
+</div>
 	<div id="node-input-tip" class="form-tips"><span data-i18n="http-send-multipart.tip.in"></span><code><span id="node-input-path"></span></code>.</div>
   <div id="node-output-tip" class="form-tips"><span data-i18n="http-send-multipart.tip.out"></span><code><span id="node-output-path"></span></code>.</div>
 </script>
@@ -44,7 +50,8 @@
 		color: "rgb(231, 231, 174)",
 		defaults: {
 			name: {
-				value: ""
+				value: "",
+				required: false
 			},
 			url: {
 				value: "",
@@ -53,11 +60,11 @@
 			method: {
 				value: "POST",
 				required: true
-			},
-			swaggerDoc: {
-				type: "swagger-doc",
-				required: false
 			}
+		},
+		credentials: {
+			user: {type:"text"},
+			password: {type: "password"}
 		},
 		inputs: 1,
 		outputs: 1,
@@ -77,6 +84,47 @@
 			if (root.slice(-1) == "/") {
 				root = root.slice(0, -1);
 			}
+
+			$("#node-input-useAuth").change(function() {
+							if ($(this).is(":checked")) {
+									$(".node-input-useAuth-row").show();
+							} else {
+									$(".node-input-useAuth-row").hide();
+									$('#node-input-user').val('');
+									$('#node-input-password').val('');
+							}
+					});
+					if (this.credentials.user || this.credentials.has_password) {
+							$('#node-input-useAuth').prop('checked', true);
+					} else {
+							$('#node-input-useAuth').prop('checked', false);
+					}
+					$("#node-input-useAuth").change();
+
+					function updateTLSOptions() {
+							if ($("#node-input-usetls").is(':checked')) {
+									$("#node-row-tls").show();
+							} else {
+									$("#node-row-tls").hide();
+							}
+					}
+					if (this.tls) {
+							$('#node-input-usetls').prop('checked', true);
+					} else {
+							$('#node-input-usetls').prop('checked', false);
+					}
+					updateTLSOptions();
+					$("#node-input-usetls").on("click",function() {
+							updateTLSOptions();
+					});
+					$("#node-input-ret").change(function() {
+							if ($("#node-input-ret").val() === "obj") {
+									$("#tip-json").show();
+							} else {
+									$("#tip-json").hide();
+							}
+					});
+
 
 			$("#node-input-path").html(root);
 			$("#node-input-tip").show();

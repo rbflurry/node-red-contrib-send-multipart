@@ -2,8 +2,9 @@
 let cors = require('cors');
 let FormData = require('form-data'),
 	mustache = require('mustache'),
+	request = require('request'),
 	http = require('http'),
-	https = require('https'), // NOTE: consider using request.js instead?
+	https = require('https'),
 	fs = require('fs');
 
 module.exports = function(RED) {
@@ -25,6 +26,9 @@ module.exports = function(RED) {
 
 		// 1) Process inputs to Node
 		this.on("input", function(msg) {
+
+			console.log('Received msg. Msg.payload: ' + JSON.stringify(msg.payload));
+
 			var preRequestTimestamp = process.hrtime();
 			node.status({
 				fill: "blue",
@@ -76,8 +80,13 @@ module.exports = function(RED) {
 
 			// TODO: Expand to include all types of form data, not just files
 
-			// formData.append("files", msg.payload);
-			formData.append("file", fs.createReadStream(msg.payload));
+			// formData.append("files", JSON.stringify(msg.payload));
+			// formData.append("files", fs.createReadStream(msg.payload));
+			formData.append('file', JSON.stringify(msg.payload), {
+				filename: 'usage.csv',
+				contentType: 'multipart/form-data'
+			});
+
 
 			formDataHeaders = formData.getHeaders();
 
@@ -92,6 +101,7 @@ module.exports = function(RED) {
 			console.log('Request url: ' + opts.url);
 
 			// 2) Format POST request
+			var responseMsg = {};
 
 			// Add auth if it exists
 			if (this.credentials && this.credentials.user) {
@@ -102,30 +112,55 @@ module.exports = function(RED) {
 				};
 			}
 
-			var request;
-			if (url.indexOf('https://') > -1) {
-				request = https.request(opts);
-			} else {
-				request = http.request(opts);
-			}
+			console.log('About to submit form data...');
+
+			formData.submit(url, function(err, res) {
+				console.log('We are submitting the form data...');
+
+				if (err) {
+					console.log("Error!" + err.toString());
+				} else {
+					console.log('Sent form data');
+					if (res.statusCode > 299 || res.status > 299) {
+						console.log('There was a problem submitting the data: ' + JSON.stringify(res.body));
+					} else {
+						console.log('Successfully sent data!');
+					}
+
+				}
+
+				responseMsg.statusCode = res.status;
+				responseMsg.payload = res.body;
+				node.send(responseMsg);
+			});
+
+			// var request;
+			// if (url.indexOf('https://') > -1) {
+			// 	request = https.request(opts);
+			// } else {
+			// 	request = http.request(opts);
+			// }
 
 			// 3) Send POST request to endpoint
 
-			formData.pipe(request);
+			// formData.pipe(request);
 
 			// TODO: handle output
 
-			// Potential solution
-			// fs.stat("image.jpg", function(err, stats) {
-			// 	restler.post("http://posttestserver.com/post.php", {
-			// 		multipart: true,
-			// 		data: {
-			// 			"folder_id": "0",
-			// 			"filename": restler.file("image.jpg", null, stats.size, null, "image/jpg")
-			// 		}
-			// 	}).on("complete", function(data) {
-			// 		console.log(data);
-			// 	});
+			// console.log('url: ' + url);
+			//
+			// var thisReq = request.post(url, function(err, resp, body) {
+			// 	if (err) {
+			// 		console.log('Error!');
+			// 	} else {
+			// 		// console.log('Data sent to ' + url);
+			// 		console.log('response: ' + resp);
+			// 	}
+			// });
+			// var form = thisReq.form();
+			// form.append('file', JSON.stringify(msg.payload), {
+			// 	filename: 'usage.csv',
+			// 	contentType: 'multipart/form-data'
 			// });
 
 		}); // end of on.input
