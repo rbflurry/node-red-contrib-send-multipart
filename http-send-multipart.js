@@ -2,6 +2,7 @@
 let cors = require('cors');
 let FormData = require('form-data'),
 	mustache = require('mustache'),
+	restler = require('restler'),
 	fs = require('fs');
 
 module.exports = function(RED) {
@@ -42,25 +43,17 @@ module.exports = function(RED) {
 				});
 				return;
 			}
-			// url must start http:// or https:// so assume http:// if not set
-			if (!((url.indexOf("http://") === 0) || (url.indexOf("https://") === 0))) {
-				if (tlsNode) {
-					url = "https://" + url;
-				} else {
-					url = "http://" + url;
-				}
-			}
 
 			var opts = {
 				method: 'POST',
 				url: url,
 				timeout: node.reqTimeout,
-				followRedirect: nodeFollowRedirects,
+				// followRedirect: nodeFollowRedirects,
 				headers: {},
-				encoding: null,
+				encoding: null
 			};
 
-			// Normalize headers
+			// Normalize headers / Copy over existing headers
 			if (msg.headers) {
 				for (var v in msg.headers) {
 					if (msg.headers.hasOwnProperty(v)) {
@@ -79,10 +72,23 @@ module.exports = function(RED) {
 			// 2) Create form data
 
 			var formData = new FormData();
-			formData.append("files", msg.payload);
-			// formData.append("file", fs.createReadStream(msg.payload));
 
-			opts.headers = formData.getHeaders();
+			// TODO: Expand to include all types of form data, not just files
+
+			// formData.append("files", msg.payload);
+			formData.append("file", fs.createReadStream(msg.payload));
+
+			formDataHeaders = formData.getHeaders();
+
+			// insert formDataHeaders into request headers
+			for (var i in formDataHeaders) {
+				if (formDataHeaders.hasOwnProperty(i)) {
+					opts.headers[i] = formDataHeaders[i];
+				}
+			}
+
+			console.log('Request headers: ' + JSON.stringify(opts.headers)); // TODO: remove later
+			console.log('Request url: ' + opts.url);
 
 			// 2) Format POST request
 
@@ -95,7 +101,18 @@ module.exports = function(RED) {
 				};
 			}
 
+			var request;
+			if (url.indexOf('https://') > -1) {
+				request = https(opts);
+			} else {
+				request = http(opts);
+			}
+
 			// 3) Send POST request to endpoint
+
+			formData.pipe(request);
+
+			// TODO: handle output
 
 			// Potential solution
 			// fs.stat("image.jpg", function(err, stats) {
@@ -110,9 +127,9 @@ module.exports = function(RED) {
 			// 	});
 			// });
 
-		}); // end of httpSendMultipart fxn
+		}); // end of on.input
 
-	}
+	} // end of httpSendMultipart fxn
 
 	// Register the Node
 	RED.nodes.registerType("http-send-multipart", httpSendMultipart, {

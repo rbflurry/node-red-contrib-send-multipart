@@ -1,4 +1,4 @@
 0.0.4
 - renamed all files to lower case
-0.0.6
-- created new category "special"
+0.0.8
+- fixed silly syntax errors in main js file
