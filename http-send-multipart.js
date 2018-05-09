@@ -27,7 +27,7 @@ module.exports = function(RED) {
 		// 1) Process inputs to Node
 		this.on("input", function(msg) {
 
-			console.log('Received msg. Msg.payload: ' + JSON.stringify(msg.payload));
+			console.log('Received msg.payload: ' + JSON.stringify(msg.payload));
 
 			var preRequestTimestamp = process.hrtime();
 			node.status({
