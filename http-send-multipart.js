@@ -105,34 +105,47 @@ module.exports = function(RED) {
 
 			// Add auth if it exists
 			if (this.credentials && this.credentials.user) {
+				console.log("Detected authentication; adding it now");
 				opts.auth = {
 					user: this.credentials.user,
 					pass: this.credentials.password,
 					sendImmediately: false
 				};
+				// alt:
+				var username = this.credentials.user;
+		    password = this.credentials.password;
+		    url = 'https://' + username + ':' + password + '@rest.apisandbox.zuora.com/v1/usage'; // TODO make dynamic
+
 			}
 
-			console.log('About to submit form data...');
+			// FormData.submit() Method
 
-			formData.submit(url, function(err, res) {
-				console.log('We are submitting the form data...');
+			// ===================================================================================================
 
-				if (err) {
-					console.log("Error!" + err.toString());
-				} else {
-					console.log('Sent form data');
-					if (res.statusCode > 299 || res.status > 299) {
-						console.log('There was a problem submitting the data: ' + JSON.stringify(res.body));
-					} else {
-						console.log('Successfully sent data!');
-					}
+			// formData.submit(url, function(err, res) {
+			// 	console.log('We are submitting the form data...');
+			//
+			// 	if (err) {
+			// 		console.log("Error!" + err.toString());
+			// 	} else {
+			// 		console.log('Sent form data');
+			// 		if (res.statusCode > 299) {
+			// 			// console.log('Response object keys: ' + Object.keys(res));
+			// 			console.log('res.status: ' + res.statusCode);
+			// 			console.log('There was a problem submitting the data: ' + JSON.stringify(res.statusMessage));
+			// 		} else {
+			// 			console.log('Successfully sent data!');
+			// 		}
+			//
+			// 	}
+			//
+			// 	responseMsg.statusCode = res.status;
+			// 	responseMsg.payload = res.body;
+			// 	node.send(responseMsg);
+			// });
 
-				}
+			// ===================================================================================================
 
-				responseMsg.statusCode = res.status;
-				responseMsg.payload = res.body;
-				node.send(responseMsg);
-			});
 
 			// var request;
 			// if (url.indexOf('https://') > -1) {
@@ -145,23 +158,23 @@ module.exports = function(RED) {
 
 			// formData.pipe(request);
 
-			// TODO: handle output
 
-			// console.log('url: ' + url);
-			//
-			// var thisReq = request.post(url, function(err, resp, body) {
-			// 	if (err) {
-			// 		console.log('Error!');
-			// 	} else {
-			// 		// console.log('Data sent to ' + url);
-			// 		console.log('response: ' + resp);
-			// 	}
-			// });
-			// var form = thisReq.form();
-			// form.append('file', JSON.stringify(msg.payload), {
-			// 	filename: 'usage.csv',
-			// 	contentType: 'multipart/form-data'
-			// });
+
+			console.log('url: ' + url);
+
+			var thisReq = request.post(url, function(err, resp, body) {
+				if (err) {
+					console.log('Error!');
+				} else {
+					// console.log('Data sent to ' + url);
+					console.log('response body: ' + (body));
+				}
+			});
+			var form = thisReq.form();
+			form.append('file', JSON.stringify(msg.payload), {
+				filename: 'usage.csv',
+				contentType: 'multipart/form-data'
+			});
 
 		}); // end of on.input
 

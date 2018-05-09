@@ -1,45 +1,44 @@
 <script type="text/x-red" data-template-name="http-send-multipart">
     <div class="form-row">
-        <label for="node-input-method"><i class="fa fa-tasks"></i> <span data-i18n="httpin.label.method"></span></label>
+        <label for="node-input-method"><i class="fa fa-tasks"></i> <span data-i18n="httpin.label.method"></span> Method </label>
         <select type="text" id="node-input-method" style="width:70%;">
-        <option value="POST">POST</option>
+        <option selected value="POST">POST</option>
         <option value="PUT">PUT</option>
         <option value="use" data-i18n="httpin.setby"></option>
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-url"><i class="fa fa-globe"></i> <span data-i18n="httpin.label.url"></span></label>
+        <label for="node-input-url"><i class="fa fa-globe"></i> url </label>
         <input type="text" id="node-input-url" placeholder="http://">
     </div>
 
     <div class="form-row">
         <input type="checkbox" id="node-input-follow-redirects" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-follow-redirects" style="width: auto" data-i18n="httpin.follow-redirects"></label>
+        <label for="node-input-follow-redirects" style="width: auto" data-i18n="httpin.follow-redirects">  </label>
     </div>
 
     <div class="form-row">
         <input type="checkbox" id="node-input-usetls" style="display: inline-block; width: auto; vertical-align: top;">
         <label for="node-input-usetls" style="width: auto" data-i18n="httpin.use-tls"></label>
         <div id="node-row-tls" class="hide">
-            <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-tls"><span data-i18n="httpin.tls-config"></span></label><input type="text" style="width: 300px" id="node-input-tls">
+            <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-tls"></label> Enable secure (SSL/TLS) connection <input type="text" style="width: 300px" id="node-input-tls">
         </div>
     </div>
 
     <div class="form-row">
         <input type="checkbox" id="node-input-useAuth" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-useAuth" style="width: 70%;"><span data-i18n="httpin.basicauth"></span></label>
+        <label for="node-input-useAuth" style="width: 70%;"><span data-i18n="httpin.basicauth"></span> Use basic authentication </label>
         <div style="margin-left: 20px" class="node-input-useAuth-row hide">
             <div class="form-row">
-                <label for="node-input-user"><i class="fa fa-user"></i> <span data-i18n="common.label.username"></span></label>
+                <label for="node-input-user"><i class="fa fa-user"></i> <span data-i18n="common.label.username"></span> Username </label>
                 <input type="text" id="node-input-user">
             </div>
             <div class="form-row">
-                <label for="node-input-password"><i class="fa fa-lock"></i> <span data-i18n="common.label.password"></span></label>
+                <label for="node-input-password"><i class="fa fa-lock"></i> <span data-i18n="common.label.password"></span> Password </label>
                 <input type="password" id="node-input-password">
             </div>
         </div>
     </div>
-
 
     <div class="form-row">
         <label for="node-input-ret"><i class="fa fa-arrow-left"></i> <span data-i18n="httpin.label.return"></span></label>
@@ -101,7 +100,7 @@
         outputs:1,
         icon: "white-globe.png",
         label: function() {
-            return this.name|| "www request";
+            return this.name|| "httpSendMultipart";
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
