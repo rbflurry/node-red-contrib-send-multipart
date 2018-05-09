@@ -5,6 +5,8 @@
 	"scripts": {},
 	"dependencies": {
 		"cors": "^2.8.4",
+		"csv-string": "^3.1.2",
+		"csv-writer": "^1.0.0",
 		"form-data": "^2.3.2",
 		"mustache": "^2.3.0",
 		"request": "^2.85.0"

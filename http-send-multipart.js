@@ -5,6 +5,8 @@ let FormData = require('form-data'),
 	request = require('request'),
 	http = require('http'),
 	https = require('https'),
+	CSV = require('csv-string'),
+	csvWriterCreator = require('csv-writer'),
 	fs = require('fs');
 
 module.exports = function(RED) {
@@ -49,6 +51,33 @@ module.exports = function(RED) {
 				return;
 			}
 
+			// Write CSV file - old-fashioned way
+
+			// fs.writeFile("bork.csv", msg.payload, function(err) {
+			// 	if (err) {
+			// 		return console.log(err);
+			// 	}
+			// 	console.log("The file was saved!");
+			// });
+
+			// Write CSV file - csvWriter
+			// let csvWriter = csvWriterCreator({
+			// 	path: './usage.csv',
+			// 	header: [
+			// 		{id: 'ACCOUNT_ID', title: 'ACCOUNT_ID' },
+			// 		{id: 'UOM', title: 'UOM'},
+			// 		{id: 'QTY', title: 'QTY'},
+			// 		{id: 'STARTDATE', title: 'STARTDATE'},
+			// 		{id: 'ENDDATE', title: 'ENDDATE'},
+			// 		{id: 'SUBSCRIPTION_ID', title: 'SUBSCRIPTION_ID'},
+			// 		{id: 'CHARGE_ID', title: 'CHARGE_ID'},
+			// 		{id: 'DESCRIPTION', title: 'DESCRIPTION'}
+			// 	]
+			// });
+			// csvWriter.writeRecords(msg.payload).then(() => {
+			// 	console.log('wrote the records!');
+			// });
+
 			var opts = {
 				method: 'POST',
 				url: url,
@@ -59,16 +88,10 @@ module.exports = function(RED) {
 			};
 
 			// Normalize headers / Copy over existing headers
+			// TODO: refactor/ simplify
 			if (msg.headers) {
 				for (var v in msg.headers) {
 					if (msg.headers.hasOwnProperty(v)) {
-						// var name = v.toLowerCase();
-						// if (name !== "content-type" && name !== "content-length") {
-						// 	// only normalise the known headers used later in this
-						// 	// function. Otherwise leave them alone.
-						// 	name = v;
-						// }
-						// opts.headers[name] = msg.headers[v];
 						opts.headers[v] = msg.headers[v];
 					}
 				}
@@ -81,11 +104,11 @@ module.exports = function(RED) {
 			// TODO: Expand to include all types of form data, not just files
 
 			// formData.append("files", JSON.stringify(msg.payload));
-			// formData.append("files", fs.createReadStream(msg.payload));
-			formData.append('file', JSON.stringify(msg.payload), {
-				filename: 'usage.csv',
-				contentType: 'multipart/form-data'
-			});
+			// formData.append("files", fs.createReadStream("borkbork.csv"));
+			// formData.append('file', fs.createReadStream("borkbork.csv"), {
+			// 	filename: 'borkbork.csv',
+			// 	contentType: 'multipart/form-data'
+			// });
 
 
 			formDataHeaders = formData.getHeaders();
@@ -103,9 +126,9 @@ module.exports = function(RED) {
 			// Add auth if it exists
 			if (this.credentials && this.credentials.user) {
 				console.log("Detected authentication; adding it now");
-				var urlTail = url.substring(url.indexOf('://')+3); // hacky but it works. don't judge me
+				var urlTail = url.substring(url.indexOf('://') + 3); // hacky but it works. don't judge me
 				var username = this.credentials.user,
-		    password = this.credentials.password;
+					password = this.credentials.password;
 				url = 'https://' + username + ':' + password + '@' + urlTail; // TODO make dynamic
 
 			}
@@ -148,14 +171,49 @@ module.exports = function(RED) {
 				msg.payload = body;
 				msg.statusCode = resp.statusCode || resp.status;
 				console.log('Sending response message: ' + JSON.stringify(msg));
-			  node.send(msg);
+				node.send(msg);
 			});
 			var form = thisReq.form();
-			form.append('file', JSON.stringify(msg.payload), {
-				filename: 'usage.csv',
+			form.append('file', fs.createReadStream('borkbork.csv'), { // TODO: change to be csv FILE
+				filename: 'borkbork.csv',
 				contentType: 'multipart/form-data'
 			});
 
+			console.log('form: ' + JSON.stringify(form, null, 2));
+
+
+			//  Taken from Postman
+			// =================================================================================
+			// var csvFile = CSV.parse(msg.payload);
+			// var options = {
+			// 	method: 'POST',
+			// 	url: 'https://rest.apisandbox.zuora.com/v1/usage',
+			// 	headers: {
+			// 		'postman-token': '253d8e07-3081-2484-3ab8-b9acee884a0c',
+			// 		'cache-control': 'no-cache',
+			// 		apisecretaccesskey: 'uiotS8D2018!',
+			// 		apiaccesskeyid: 'greg.kwiatkowski+testDrive@sbdinc.com',
+			// 		'content-type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'
+			// 	},
+			// 	formData: {
+			// 		file: {
+			// 			value: fs.createReadStream(csvFile),
+			// 			options: {
+			// 				filename: 'borkbork.csv',
+			// 				contentType: 'multipart/form-data'
+			// 			}
+			// 		}
+			// 	}
+			// };
+
+			// request(options, function(err, res, body) {
+			// 	if (err) {
+			// 		console.log(err);
+			// 	} else {
+			// 		console.log("Response body: " + body);
+			// 	}
+			// });
+			// ============================================================================
 
 
 		}); // end of on.input
