@@ -14,12 +14,12 @@
 
     <div class="form-row">
         <input type="checkbox" id="node-input-follow-redirects" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-follow-redirects" style="width: auto" data-i18n="httpin.follow-redirects">  </label>
+        <label for="node-input-follow-redirects" style="width: auto"> Follow redirects </label>
     </div>
 
     <div class="form-row">
         <input type="checkbox" id="node-input-usetls" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-usetls" style="width: auto" data-i18n="httpin.use-tls"></label>
+        <label for="node-input-usetls" style="width: auto">  Enable secure (SSL/TLS) connection </label>
         <div id="node-row-tls" class="hide">
             <label style="width: auto; margin-left: 20px; margin-right: 10px;" for="node-input-tls"></label> Enable secure (SSL/TLS) connection <input type="text" style="width: 300px" id="node-input-tls">
         </div>
@@ -34,18 +34,18 @@
                 <input type="text" id="node-input-user">
             </div>
             <div class="form-row">
-                <label for="node-input-password"><i class="fa fa-lock"></i> <span data-i18n="common.label.password"></span> Password </label>
+                <label for="node-input-password"><i class="fa fa-lock"></i> <span>Password</span></label>
                 <input type="password" id="node-input-password">
             </div>
         </div>
     </div>
 
     <div class="form-row">
-        <label for="node-input-ret"><i class="fa fa-arrow-left"></i> <span data-i18n="httpin.label.return"></span></label>
+        <label for="node-input-ret"><i class="fa fa-arrow-left"></i><span> Return</span></label>
         <select type="text" id="node-input-ret" style="width:70%;">
-        <option value="txt" data-i18n="httpin.utf8"></option>
-        <option value="bin" data-i18n="httpin.binary"></option>
-        <option value="obj" data-i18n="httpin.json"></option>
+        <option selected value="txt">UTF-8 string</option>
+        <option value="bin">Binary</option>
+        <option value="obj">a parsed JSON object</option>
         </select>
     </div>
     <div class="form-row">

@@ -100,21 +100,13 @@ module.exports = function(RED) {
 			console.log('Request headers: ' + JSON.stringify(opts.headers)); // TODO: remove later
 			console.log('Request url: ' + opts.url);
 
-			// 2) Format POST request
-			var responseMsg = {};
-
 			// Add auth if it exists
 			if (this.credentials && this.credentials.user) {
 				console.log("Detected authentication; adding it now");
-				opts.auth = {
-					user: this.credentials.user,
-					pass: this.credentials.password,
-					sendImmediately: false
-				};
-				// alt:
-				var username = this.credentials.user;
+				var urlTail = url.substring(url.indexOf('://')+3); // hacky but it works. don't judge me
+				var username = this.credentials.user,
 		    password = this.credentials.password;
-		    url = 'https://' + username + ':' + password + '@rest.apisandbox.zuora.com/v1/usage'; // TODO make dynamic
+				url = 'https://' + username + ':' + password + '@' + urlTail; // TODO make dynamic
 
 			}
 
@@ -146,35 +138,25 @@ module.exports = function(RED) {
 
 			// ===================================================================================================
 
-
-			// var request;
-			// if (url.indexOf('https://') > -1) {
-			// 	request = https.request(opts);
-			// } else {
-			// 	request = http.request(opts);
-			// }
-
-			// 3) Send POST request to endpoint
-
-			// formData.pipe(request);
-
-
-
-			console.log('url: ' + url);
-
+			var respBody, respStatus;
 			var thisReq = request.post(url, function(err, resp, body) {
 				if (err) {
-					console.log('Error!');
+					console.log('Error:' + err.toString());
 				} else {
-					// console.log('Data sent to ' + url);
-					console.log('response body: ' + (body));
+					console.log('response body: ' + body);
 				}
+				msg.payload = body;
+				msg.statusCode = resp.statusCode || resp.status;
+				console.log('Sending response message: ' + JSON.stringify(msg));
+			  node.send(msg);
 			});
 			var form = thisReq.form();
 			form.append('file', JSON.stringify(msg.payload), {
 				filename: 'usage.csv',
 				contentType: 'multipart/form-data'
 			});
+
+
 
 		}); // end of on.input
 
