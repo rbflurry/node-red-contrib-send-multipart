@@ -1,13 +1,14 @@
 // require in libs
-let cors = require('cors');
 let FormData = require('form-data'),
 	mustache = require('mustache'),
 	request = require('request'),
 	http = require('http'),
 	https = require('https'),
-	CSV = require('csv-string'),
-	csvWriterCreator = require('csv-writer'),
+	// CSV = require('csv-string'),
+	// csvWriterCreator = require('csv-writer'),
 	fs = require('fs');
+
+let filename = "writeUsageOnSite.csv";
 
 module.exports = function(RED) {
 
@@ -53,12 +54,12 @@ module.exports = function(RED) {
 
 			// Write CSV file - old-fashioned way
 
-			// fs.writeFile("bork.csv", msg.payload, function(err) {
-			// 	if (err) {
-			// 		return console.log(err);
-			// 	}
-			// 	console.log("The file was saved!");
-			// });
+			fs.writeFile(filename, msg.payload, function(err) {
+				if (err) {
+					return console.log(err);
+				}
+				console.log("The file was saved!");
+			});
 
 			// Write CSV file - csvWriter
 			// let csvWriter = csvWriterCreator({
@@ -175,8 +176,8 @@ module.exports = function(RED) {
 			});
 			var form = thisReq.form();
 			// TODO: make dynamic
-			form.append('file', fs.createReadStream('hayGreg.csv'), { // TODO: change to be csv FILE
-				filename: 'hayGreg.csv',
+			form.append('file', fs.createReadStream("writeUsageOnSite.csv"), { // TODO: change to be csv FILE
+				filename: "writeUsageOnSite.csv", // NOTE: chagne later
 				contentType: 'multipart/form-data'
 			});
 
