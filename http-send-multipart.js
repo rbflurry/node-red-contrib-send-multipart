@@ -174,12 +174,13 @@ module.exports = function(RED) {
 				node.send(msg);
 			});
 			var form = thisReq.form();
-			form.append('file', fs.createReadStream('borkbork.csv'), { // TODO: change to be csv FILE
-				filename: 'borkbork.csv',
+			// TODO: make dynamic
+			form.append('file', fs.createReadStream('hayGreg.csv'), { // TODO: change to be csv FILE
+				filename: 'hayGreg.csv',
 				contentType: 'multipart/form-data'
 			});
 
-			console.log('form: ' + JSON.stringify(form, null, 2));
+			// console.log('form: ' + JSON.stringify(form, null, 2));
 
 
 			//  Taken from Postman
