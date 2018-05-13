@@ -43,11 +43,11 @@ module.exports = function(RED) {
 				url = mustache.render(nodeUrl, msg);
 			}
 			if (!url) {
-				node.error(RED._("httpin.errors.no-url"), msg);
+				node.error(RED._("httpSendMultipart.errors.no-url"), msg);
 				node.status({
 					fill: "red",
 					shape: "ring",
-					text: (RED._("httpin.errors.no-url"))
+					text: (RED._("httpSendMultipart.errors.no-url"))
 				});
 				return;
 			}
@@ -172,16 +172,30 @@ module.exports = function(RED) {
 				msg.payload = body;
 				msg.statusCode = resp.statusCode || resp.status;
 				console.log('Sending response message: ' + JSON.stringify(msg));
+
+				if (node.ret !== "bin") {
+					msg.payload = body.toString('utf8'); // txt
+
+					if (node.ret === "obj") {
+						try {
+							msg.payload = JSON.parse(body);
+						} // obj
+						catch (e) {
+							node.warn(RED._("httpSendMultipart.errors.json-error"));
+						}
+					}
+				}
+
 				node.send(msg);
 			});
 			var form = thisReq.form();
 			// TODO: make dynamic
-			form.append('file', fs.createReadStream("writeUsageOnSite.csv"), { // TODO: change to be csv FILE
-				filename: "writeUsageOnSite.csv", // NOTE: chagne later
+			form.append('file', fs.createReadStream("usage.csv"), { // TODO: change to be csv FILE
+				filename: "usage.csv", // NOTE: chagne later
 				contentType: 'multipart/form-data'
 			});
 
-			// console.log('form: ' + JSON.stringify(form, null, 2));
+
 
 
 			//  Taken from Postman

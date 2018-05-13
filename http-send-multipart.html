@@ -1,10 +1,10 @@
 <script type="text/x-red" data-template-name="http-send-multipart">
     <div class="form-row">
-        <label for="node-input-method"><i class="fa fa-tasks"></i> <span data-i18n="httpin.label.method"></span> Method </label>
+        <label for="node-input-method"><i class="fa fa-tasks"></i> <span data-i18n="httpSendMultipart.label.method"></span> Method </label>
         <select type="text" id="node-input-method" style="width:70%;">
         <option selected value="POST">POST</option>
         <option value="PUT">PUT</option>
-        <option value="use" data-i18n="httpin.setby"></option>
+        <option value="use" data-i18n="httpSendMultipart.setby"></option>
         </select>
     </div>
     <div class="form-row">
@@ -27,7 +27,7 @@
 
     <div class="form-row">
         <input type="checkbox" id="node-input-useAuth" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-useAuth" style="width: 70%;"><span data-i18n="httpin.basicauth"></span> Use basic authentication </label>
+        <label for="node-input-useAuth" style="width: 70%;"><span data-i18n="httpSendMultipart.basicauth"></span> Use basic authentication </label>
         <div style="margin-left: 20px" class="node-input-useAuth-row hide">
             <div class="form-row">
                 <label for="node-input-user"><i class="fa fa-user"></i> <span data-i18n="common.label.username"></span> Username </label>
@@ -52,7 +52,7 @@
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
         <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
     </div>
-    <div class="form-tips" id="tip-json" hidden><span data-i18n="httpin.tip.req"></span></div>
+    <div class="form-tips" id="tip-json" hidden><span data-i18n="httpSendMultipart.tip.req"></span></div>
 </script>
 
 <script type="text/x-red" data-help-name="http-send-multipart">
