@@ -8,7 +8,7 @@ let FormData = require('form-data'),
 	// csvWriterCreator = require('csv-writer'),
 	fs = require('fs');
 
-let filename = "writeUsageOnSite.csv";
+let filename = "usage.csv";
 
 module.exports = function(RED) {
 
@@ -54,53 +54,34 @@ module.exports = function(RED) {
 
 			// Write CSV file - old-fashioned way
 
-			fs.writeFile(filename, msg.payload, function(err) {
-				if (err) {
-					return console.log(err);
-				}
-				console.log("The file was saved!");
-			});
-
-			// Write CSV file - csvWriter
-			// let csvWriter = csvWriterCreator({
-			// 	path: './usage.csv',
-			// 	header: [
-			// 		{id: 'ACCOUNT_ID', title: 'ACCOUNT_ID' },
-			// 		{id: 'UOM', title: 'UOM'},
-			// 		{id: 'QTY', title: 'QTY'},
-			// 		{id: 'STARTDATE', title: 'STARTDATE'},
-			// 		{id: 'ENDDATE', title: 'ENDDATE'},
-			// 		{id: 'SUBSCRIPTION_ID', title: 'SUBSCRIPTION_ID'},
-			// 		{id: 'CHARGE_ID', title: 'CHARGE_ID'},
-			// 		{id: 'DESCRIPTION', title: 'DESCRIPTION'}
-			// 	]
-			// });
-			// csvWriter.writeRecords(msg.payload).then(() => {
-			// 	console.log('wrote the records!');
+			// fs.writeFile(filename, msg.payload, function(err) {
+			// 	if (err) {
+			// 		return console.log(err);
+			// 	}
+			// 	console.log("The file was saved!");
 			// });
 
-			var opts = {
-				method: 'POST',
-				url: url,
-				timeout: node.reqTimeout,
-				// followRedirect: nodeFollowRedirects,
-				headers: {},
-				encoding: null
-			};
+			// var opts = {
+			// 	method: 'POST',
+			// 	url: url,
+			// 	timeout: node.reqTimeout,
+			// 	headers: {},
+			// 	encoding: null
+			// };
 
 			// Normalize headers / Copy over existing headers
 			// TODO: refactor/ simplify
-			if (msg.headers) {
-				for (var v in msg.headers) {
-					if (msg.headers.hasOwnProperty(v)) {
-						opts.headers[v] = msg.headers[v];
-					}
-				}
-			}
+			// if (msg.headers) {
+			// 	for (var v in msg.headers) {
+			// 		if (msg.headers.hasOwnProperty(v)) {
+			// 			opts.headers[v] = msg.headers[v];
+			// 		}
+			// 	}
+			// }
 
 			// 2) Create form data
 
-			var formData = new FormData();
+			// var formData = new FormData();
 
 			// TODO: Expand to include all types of form data, not just files
 
@@ -111,26 +92,21 @@ module.exports = function(RED) {
 			// 	contentType: 'multipart/form-data'
 			// });
 
-
-			formDataHeaders = formData.getHeaders();
+			// formDataHeaders = formData.getHeaders();
 
 			// insert formDataHeaders into request headers
-			for (var i in formDataHeaders) {
-				if (formDataHeaders.hasOwnProperty(i)) {
-					opts.headers[i] = formDataHeaders[i];
-				}
-			}
-
-			console.log('Request headers: ' + JSON.stringify(opts.headers)); // TODO: remove later
-			console.log('Request url: ' + opts.url);
+			// for (var i in formDataHeaders) {
+			// 	if (formDataHeaders.hasOwnProperty(i)) {
+			// 		opts.headers[i] = formDataHeaders[i];
+			// 	}
+			// }
 
 			// Add auth if it exists
 			if (this.credentials && this.credentials.user) {
-				console.log("Detected authentication; adding it now");
 				var urlTail = url.substring(url.indexOf('://') + 3); // hacky but it works. don't judge me
 				var username = this.credentials.user,
 					password = this.credentials.password;
-				url = 'https://' + username + ':' + password + '@' + urlTail; // TODO make dynamic
+				url = 'https://' + username + ':' + password + '@' + urlTail;
 
 			}
 
@@ -190,12 +166,10 @@ module.exports = function(RED) {
 			});
 			var form = thisReq.form();
 			// TODO: make dynamic
-			form.append('file', fs.createReadStream("usage.csv"), { // TODO: change to be csv FILE
-				filename: "usage.csv", // NOTE: chagne later
+			form.append('file', fs.createReadStream(filename), { // TODO: change to be csv FILE
+				filename: filename, // NOTE: chagne later
 				contentType: 'multipart/form-data'
 			});
-
-
 
 
 			//  Taken from Postman
