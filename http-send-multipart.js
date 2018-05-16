@@ -72,14 +72,21 @@ module.exports = function(RED) {
 			var respBody, respStatus;
 
 			var thisReq = request.post(url, function(err, resp, body) {
+
 				node.status({});
-				if (err) {
-					console.log('Error:' + err.toString());
-				} else {
-					console.log('response body: ' + body);
+				if (err || !resp) {
+					// node.error(RED._("httpSendMultipart.errors.no-url"), msg);
+					var statusText = "Unexpected error";
+					if (err) {statusText = err;} else if (!resp) { statusText = "No response object"; }
+					node.status({
+						fill: "red",
+						shape: "ring",
+						text:statusText
+					});
 				}
 				msg.payload = body;
 				msg.statusCode = resp.statusCode || resp.status;
+				msg.headers = resp.headers;
 				console.log('Sending response message: ' + JSON.stringify(msg));
 
 				if (node.ret !== "bin") {
