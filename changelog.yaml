@@ -12,3 +12,7 @@
 0.2.0
 - fixed package dependencies
 - wrote a reliable way to export csv files
+0.2.1
+- updated documentation
+- added better error handling for responses
+- removed option to select method; POST only
