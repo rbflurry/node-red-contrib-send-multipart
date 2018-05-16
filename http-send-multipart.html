@@ -4,12 +4,16 @@
         <select type="text" id="node-input-method" style="width:70%;">
         <option selected value="POST">POST</option>
         <option value="PUT">PUT</option>
-        <option value="use" data-i18n="httpSendMultipart.setby"></option>
         </select>
     </div>
     <div class="form-row">
         <label for="node-input-url"><i class="fa fa-globe"></i> url </label>
         <input type="text" id="node-input-url" placeholder="http://">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-filepath"> Filepath </label>
+        <input type="text" id="node-input-filepath" placeholder="/path/to/file">
     </div>
 
     <div class="form-row">
@@ -83,11 +87,12 @@
 <script type="text/javascript">
     RED.nodes.registerType('http-send-multipart',{
         category: 'function',
-        color:"rgb(231, 231, 174)",
+        color:"rgb(179, 211, 249)",
         defaults: {
             name: {value:""},
             method:{value:"POST"},
             ret: {value:"txt"},
+            filepath: {value:""},
             url:{value:""},
             "follow-redirects":{value:true},
             tls: {type:"tls-config",required: false}

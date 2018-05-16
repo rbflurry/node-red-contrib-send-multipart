@@ -9,3 +9,6 @@
 - finally working for 1 use case almost
 0.1.0
 - enabled different content type output
+0.2.0
+- fixed package dependencies
+- wrote a reliable way to export csv files

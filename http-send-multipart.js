@@ -6,7 +6,7 @@ let FormData = require('form-data'),
 	https = require('https'),
 	fs = require('fs');
 
-let filename = "thisisreal.csv";
+var filepath = "sanityCheck.csv"; // initializing filepath
 
 module.exports = function(RED) {
 
@@ -15,20 +15,28 @@ module.exports = function(RED) {
 		RED.nodes.createNode(this, n);
 		var node = this;
 		var nodeUrl = n.url;
+
 		var nodeFollowRedirects = n["follow-redirects"];
 		var isTemplatedUrl = (nodeUrl || "").indexOf("{{") != -1;
 
-		this.ret = n.ret || "txt";
+		this.ret = n.ret || "txt"; // default return type is text
 		if (RED.settings.httpRequestTimeout) {
-			this.reqTimeout = parseInt(RED.settings.httpRequestTimeout) || 120000;
+			this.reqTimeout = parseInt(RED.settings.httpRequestTimeout) || 60000;
 		} else {
-			this.reqTimeout = 120000;
+			this.reqTimeout = 60000;
 		}
 
 		// 1) Process inputs to Node
 		this.on("input", function(msg) {
 
 			console.log('Received msg.payload: ' + JSON.stringify(msg.payload));
+
+				if (node["filepath"]) {
+					filepath = node["filepath"];
+					console.log('node.filepath: ' + node.filepath);
+			} else {
+						console.log('The node did not have a filepath input');
+										}
 
 			var preRequestTimestamp = process.hrtime();
 			node.status({
@@ -49,25 +57,6 @@ module.exports = function(RED) {
 				});
 				return;
 			}
-
-			// Write CSV file - old-fashioned way
-			// fs.writeFile(filename, msg.payload,'utf8', function(err) {
-			//
-			// 	console.log('Writing this csv string to a file: ' + msg.payload);
-			//
-			// 	if (err) {
-			// 		return console.log(err);
-			// 	}
-			// 	console.log("Filename " + filename + " was written to the local instance.");
-			// });
-
-
-			// Write CSV file - csvWriter
-			// Send msg.payload straight to httpSendMultipart
-			// var writer = csvWriter();
-			// writer.pipe(fs.createWriteStream(csvFileName));
-			// writer.write(msg.payload);
-			// writer.end();
 
 
 			// Add auth if it exists
@@ -106,45 +95,10 @@ module.exports = function(RED) {
 				node.send(msg);
 			});
 			var form = thisReq.form();
-			form.append('file', fs.createReadStream(filename), {
-				filename: filename,
+			form.append('file', fs.createReadStream(filepath), {
+				filename: filepath,
 				contentType: 'multipart/form-data'
 			});
-
-
-			//  Taken from Postman
-			// =================================================================================
-			// var csvFile = CSV.parse(msg.payload);
-			// var options = {
-			// 	method: 'POST',
-			// 	url: 'https://rest.apisandbox.zuora.com/v1/usage',
-			// 	headers: {
-			// 		'postman-token': '253d8e07-3081-2484-3ab8-b9acee884a0c',
-			// 		'cache-control': 'no-cache',
-			// 		apisecretaccesskey: 'uiotS8D2018!',
-			// 		apiaccesskeyid: 'greg.kwiatkowski+testDrive@sbdinc.com',
-			// 		'content-type': 'multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'
-			// 	},
-			// 	formData: {
-			// 		file: {
-			// 			value: fs.createReadStream(csvFile),
-			// 			options: {
-			// 				filename: 'borkbork.csv',
-			// 				contentType: 'multipart/form-data'
-			// 			}
-			// 		}
-			// 	}
-			// };
-
-			// request(options, function(err, res, body) {
-			// 	if (err) {
-			// 		console.log(err);
-			// 	} else {
-			// 		console.log("Response body: " + body);
-			// 	}
-			// });
-			// ============================================================================
-
 
 		}); // end of on.input
 
