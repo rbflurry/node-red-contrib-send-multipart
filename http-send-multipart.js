@@ -29,14 +29,15 @@ module.exports = function(RED) {
 		// 1) Process inputs to Node
 		this.on("input", function(msg) {
 
-			console.log('Received msg.payload: ' + JSON.stringify(msg.payload));
+			// Look for filepath
 
-				if (node["filepath"]) {
-					filepath = node["filepath"];
-					console.log('node.filepath: ' + node.filepath);
+			if (n.filepath) {
+					filepath = n.filepath;
+			} else if (msg.filepath) {
+					filepath = msg.filepath;
 			} else {
-						console.log('The node did not have a filepath input');
-										}
+				console.log('No filepath detected');
+			}
 
 			var preRequestTimestamp = process.hrtime();
 			node.status({
@@ -69,7 +70,9 @@ module.exports = function(RED) {
 			}
 
 			var respBody, respStatus;
+
 			var thisReq = request.post(url, function(err, resp, body) {
+				node.status({});
 				if (err) {
 					console.log('Error:' + err.toString());
 				} else {

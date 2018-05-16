@@ -4,13 +4,6 @@
 		<input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
 	</div>
 	<div class="form-row">
-		<label for="node-input-method"><i class="fa fa-tasks"></i> <span data-i18n="httpSendMultipart.label.method"></span> Method </label>
-		<select type="text" id="node-input-method" style="width:70%;">
-        <option selected value="POST">POST</option>
-        <option value="PUT">PUT</option>
-        </select>
-	</div>
-	<div class="form-row">
 		<label for="node-input-url"><i class="fa fa-globe"></i> url </label>
 		<input type="text" id="node-input-url" placeholder="http://">
 	</div>
@@ -60,10 +53,9 @@
 
 <script type="text/x-red" data-help-name="http-send-multipart">
 	<p>Provides a node for posting multipart form-data.</p>
-	<p>The URL and HTTP method can be configured in the node, if they are left blank they should be set in an incoming message on <code>msg.url</code> and <code>msg.method</code>:</p>
+	<p>The URL must be configured in the node.
 	<ul>
 		<li><code>url</code>, if set, is used as the url of the request. Must start with http: or https:</li>
-		<li><code>method</code>, if set, is used as the HTTP method of the request. Must be eith <code>POST</code> or <code>PUT</code> (default: POST).</li>
 		<li><code>headers</code>, if set, should be an object containing field/value pairs to be added as request headers</li>
 		<li><code>payload</code> is sent as the body of the request</li>
 	</ul>
@@ -87,9 +79,6 @@
 		defaults: {
 			name: {
 				value: ""
-			},
-			method: {
-				value: "POST"
 			},
 			ret: {
 				value: "txt"
