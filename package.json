@@ -4,8 +4,6 @@
 	"description": "NodeRed node for posting multipart form data to external sites",
 	"scripts": {},
 	"dependencies": {
-		"cors": "^2.8.4",
-		"form-data": "^2.3.2",
 		"mustache": "^2.3.0",
 		"request": "^2.85.0"
 	},

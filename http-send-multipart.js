@@ -1,6 +1,5 @@
 // require in libs
-let FormData = require('form-data'),
-	mustache = require('mustache'),
+let	mustache = require('mustache'),
 	request = require('request'),
 	http = require('http'),
 	https = require('https'),
