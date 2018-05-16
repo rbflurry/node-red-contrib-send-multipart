@@ -4,11 +4,9 @@ let FormData = require('form-data'),
 	request = require('request'),
 	http = require('http'),
 	https = require('https'),
-	// CSV = require('csv-string'),
-	// csvWriterCreator = require('csv-writer'),
 	fs = require('fs');
 
-let filename = "usage.csv";
+let filename = "thisisreal.csv";
 
 module.exports = function(RED) {
 
@@ -38,7 +36,7 @@ module.exports = function(RED) {
 				shape: "dot",
 				text: "httpSendMultipart.status.requesting"
 			});
-			var url = nodeUrl || msg.url; // TODO add ability to take this from the settings.js config file
+			var url = nodeUrl; // TODO add ability to take this from the settings.js config file
 			if (isTemplatedUrl) {
 				url = mustache.render(nodeUrl, msg);
 			}
@@ -53,53 +51,24 @@ module.exports = function(RED) {
 			}
 
 			// Write CSV file - old-fashioned way
-
-			// fs.writeFile(filename, msg.payload, function(err) {
+			// fs.writeFile(filename, msg.payload,'utf8', function(err) {
+			//
+			// 	console.log('Writing this csv string to a file: ' + msg.payload);
+			//
 			// 	if (err) {
 			// 		return console.log(err);
 			// 	}
-			// 	console.log("The file was saved!");
+			// 	console.log("Filename " + filename + " was written to the local instance.");
 			// });
 
-			// var opts = {
-			// 	method: 'POST',
-			// 	url: url,
-			// 	timeout: node.reqTimeout,
-			// 	headers: {},
-			// 	encoding: null
-			// };
 
-			// Normalize headers / Copy over existing headers
-			// TODO: refactor/ simplify
-			// if (msg.headers) {
-			// 	for (var v in msg.headers) {
-			// 		if (msg.headers.hasOwnProperty(v)) {
-			// 			opts.headers[v] = msg.headers[v];
-			// 		}
-			// 	}
-			// }
+			// Write CSV file - csvWriter
+			// Send msg.payload straight to httpSendMultipart
+			// var writer = csvWriter();
+			// writer.pipe(fs.createWriteStream(csvFileName));
+			// writer.write(msg.payload);
+			// writer.end();
 
-			// 2) Create form data
-
-			// var formData = new FormData();
-
-			// TODO: Expand to include all types of form data, not just files
-
-			// formData.append("files", JSON.stringify(msg.payload));
-			// formData.append("files", fs.createReadStream("borkbork.csv"));
-			// formData.append('file', fs.createReadStream("borkbork.csv"), {
-			// 	filename: 'borkbork.csv',
-			// 	contentType: 'multipart/form-data'
-			// });
-
-			// formDataHeaders = formData.getHeaders();
-
-			// insert formDataHeaders into request headers
-			// for (var i in formDataHeaders) {
-			// 	if (formDataHeaders.hasOwnProperty(i)) {
-			// 		opts.headers[i] = formDataHeaders[i];
-			// 	}
-			// }
 
 			// Add auth if it exists
 			if (this.credentials && this.credentials.user) {
@@ -109,34 +78,6 @@ module.exports = function(RED) {
 				url = 'https://' + username + ':' + password + '@' + urlTail;
 
 			}
-
-			// FormData.submit() Method
-
-			// ===================================================================================================
-
-			// formData.submit(url, function(err, res) {
-			// 	console.log('We are submitting the form data...');
-			//
-			// 	if (err) {
-			// 		console.log("Error!" + err.toString());
-			// 	} else {
-			// 		console.log('Sent form data');
-			// 		if (res.statusCode > 299) {
-			// 			// console.log('Response object keys: ' + Object.keys(res));
-			// 			console.log('res.status: ' + res.statusCode);
-			// 			console.log('There was a problem submitting the data: ' + JSON.stringify(res.statusMessage));
-			// 		} else {
-			// 			console.log('Successfully sent data!');
-			// 		}
-			//
-			// 	}
-			//
-			// 	responseMsg.statusCode = res.status;
-			// 	responseMsg.payload = res.body;
-			// 	node.send(responseMsg);
-			// });
-
-			// ===================================================================================================
 
 			var respBody, respStatus;
 			var thisReq = request.post(url, function(err, resp, body) {
@@ -155,7 +96,7 @@ module.exports = function(RED) {
 					if (node.ret === "obj") {
 						try {
 							msg.payload = JSON.parse(body);
-						} // obj
+						}
 						catch (e) {
 							node.warn(RED._("httpSendMultipart.errors.json-error"));
 						}
@@ -165,9 +106,8 @@ module.exports = function(RED) {
 				node.send(msg);
 			});
 			var form = thisReq.form();
-			// TODO: make dynamic
-			form.append('file', fs.createReadStream(filename), { // TODO: change to be csv FILE
-				filename: filename, // NOTE: chagne later
+			form.append('file', fs.createReadStream(filename), {
+				filename: filename,
 				contentType: 'multipart/form-data'
 			});
 
