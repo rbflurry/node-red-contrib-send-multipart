@@ -15,7 +15,6 @@ module.exports = function(RED) {
 		var node = this;
 		var nodeUrl = n.url;
 
-		var nodeFollowRedirects = n["follow-redirects"];
 		var isTemplatedUrl = (nodeUrl || "").indexOf("{{") != -1;
 
 		this.ret = n.ret || "txt"; // default return type is text
@@ -28,8 +27,7 @@ module.exports = function(RED) {
 		// 1) Process inputs to Node
 		this.on("input", function(msg) {
 
-			// Look for filepath
-
+			// Look for filepath - // TODO improve / document
 			if (n.filepath) {
 					filepath = n.filepath;
 			} else if (msg.filepath) {
