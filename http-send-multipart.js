@@ -32,15 +32,13 @@ module.exports = function(RED) {
 					filepath = n.filepath;
 			} else if (msg.filepath) {
 					filepath = msg.filepath;
-			} else {
-				console.log('No filepath detected');
 			}
 
 			var preRequestTimestamp = process.hrtime();
 			node.status({
 				fill: "blue",
 				shape: "dot",
-				text: "httpSendMultipart.status.requesting"
+				text: "Sending multipart request..."
 			});
 			var url = nodeUrl; // TODO add ability to take this from the settings.js config file
 			if (isTemplatedUrl) {
@@ -84,7 +82,6 @@ module.exports = function(RED) {
 				msg.payload = body;
 				msg.statusCode = resp.statusCode || resp.status;
 				msg.headers = resp.headers;
-				console.log('Sending response message: ' + JSON.stringify(msg));
 
 				if (node.ret !== "bin") {
 					msg.payload = body.toString('utf8'); // txt

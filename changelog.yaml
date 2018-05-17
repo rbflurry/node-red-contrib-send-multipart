@@ -1,18 +1,17 @@
-0.0.4
+0.0.4:
 - renamed all files to lower case
-0.0.10
+0.0.10:
 - initial setup of request
-- no more being babies
-0.0.15
-- trying "form.submit"
-0.0.20
-- finally working for 1 use case almost
-0.1.0
+- "no more being babies" - Donald Trump
+0.1.0:
 - enabled different content type output
-0.2.0
+0.2.0:
 - fixed package dependencies
 - wrote a reliable way to export csv files
-0.2.1
+0.2.1:
 - updated documentation
 - added better error handling for responses
 - removed option to select method; POST only
+0.3.0:
+  - removed redirect option
+  - removed console log statements
