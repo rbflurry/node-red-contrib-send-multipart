@@ -17,3 +17,8 @@
   - removed console log statements
 0.3.2:
   - removed let statement to make ES4 friendly
+0.3.3:
+  - improved documentation
+  - addressed some error-handling issues with missing filepath; still work to be done here
+0.3.4:
+  - why is the readme file borked

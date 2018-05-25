@@ -1,6 +1,6 @@
 {
 	"name": "node-red-contrib-send-multipart",
-	"version": "0.3.2",
+	"version": "0.3.6",
 	"description": "NodeRed node for posting multipart form data to external sites",
 	"scripts": {},
 	"dependencies": {
