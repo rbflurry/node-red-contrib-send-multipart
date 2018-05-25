@@ -15,3 +15,5 @@
 0.3.0:
   - removed redirect option
   - removed console log statements
+0.3.2:
+  - removed let statement to make ES4 friendly

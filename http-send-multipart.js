@@ -1,5 +1,5 @@
 // require in libs
-let	mustache = require('mustache'),
+var	mustache = require('mustache'),
 	request = require('request'),
 	http = require('http'),
 	https = require('https'),
