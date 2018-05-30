@@ -44,7 +44,6 @@ module.exports = function(RED) {
 					filepath = msg.filepath;
 				}
 
-				var preRequestTimestamp = process.hrtime();
 				node.status({
 					fill: "blue",
 					shape: "dot",
@@ -78,7 +77,6 @@ module.exports = function(RED) {
 
 				var thisReq = request.post(url, function(err, resp, body) {
 
-					node.status({});
 					if (err || !resp) {
 						// node.error(RED._("httpSendMultipart.errors.no-url"), msg);
 						var statusText = "Unexpected error";
@@ -113,7 +111,7 @@ module.exports = function(RED) {
 				});
 				var form = thisReq.form();
 				form.append('file', fs.createReadStream(filepath), {
-					filename: filepath,
+					filename: filepath, // TODO: dynamically pull out just the filename
 					contentType: 'multipart/form-data'
 				});
 			}
