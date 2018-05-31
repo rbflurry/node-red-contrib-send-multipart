@@ -1,8 +1,6 @@
 // require in libs
 var mustache = require('mustache'),
 	request = require('request'),
-	http = require('http'),
-	https = require('https'),
 	fs = require('fs');
 
 var filepath = "default.csv"; // initializing filepath
