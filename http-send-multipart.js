@@ -25,6 +25,18 @@ module.exports = function(RED) {
 		// 1) Process inputs to Node
 		this.on("input", function(msg) {
 
+
+			// Object extend
+			function extend(target) {
+				var sources = [].slice.call(arguments, 1);
+				sources.forEach(function (source) {
+					for (var prop in source) {
+						target[prop] = source[prop];
+					}
+				});
+				return target;
+			}
+
 			// TODO: add ability to select other input types (not just files)
 
 			// Look for filepath - // TODO improve logic
@@ -73,8 +85,28 @@ module.exports = function(RED) {
 
 				var respBody, respStatus;
 
-				var thisReq = request.post(url, function(err, resp, body) {
+				var headers = {
+					'Content-Type': 'multipart/form-data'
+				};
+				if(msg.headers){
+					var headers = extend({}, headers,  msg.headers);
+				}
+				msg['request-headers'] = headers;
 
+				var options = { method: 'POST',
+				url: url,
+				headers: headers,
+				formData: 
+				 { file: 
+					{ value: fs.createReadStream(filepath),
+					  options: 
+					   { filename: filepath,
+						 contentType: null } },
+				   minorEdit: 'true' } };
+
+
+				var thisReq = request(options, function(err, resp, body) {
+					node.status({});
 					if (err || !resp) {
 						// node.error(RED._("httpSendMultipart.errors.no-url"), msg);
 						var statusText = "Unexpected error";
@@ -104,15 +136,13 @@ module.exports = function(RED) {
 							}
 						}
 					}
+					
 
 					node.send(msg);
 				});
-				var form = thisReq.form();
-				form.append('file', fs.createReadStream(filepath), {
-					filename: filepath, // TODO: dynamically pull out just the filename
-					contentType: 'multipart/form-data'
-				});
+
 			}
+
 
 		}); // end of on.input
 
