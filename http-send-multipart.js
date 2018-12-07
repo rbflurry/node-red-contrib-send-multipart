@@ -79,7 +79,12 @@ module.exports = function(RED) {
 					var urlTail = url.substring(url.indexOf('://') + 3); // hacky but it works. don't judge me
 					var username = this.credentials.user,
 						password = this.credentials.password;
-					url = 'https://' + username + ':' + password + '@' + urlTail;
+					if(url.indexOf("https") >= 0){
+						url = 'https://' + username + ':' + password + '@' + urlTail;
+					}else{
+						url = 'http://' + username + ':' + password + '@' + urlTail;
+					}
+					
 
 				}
 
@@ -124,6 +129,7 @@ module.exports = function(RED) {
 					msg.payload = body;
 					msg.statusCode = resp.statusCode || resp.status;
 					msg.headers = resp.headers;
+					msg.options = options;
 
 					if (node.ret !== "bin") {
 						msg.payload = body.toString('utf8'); // txt
