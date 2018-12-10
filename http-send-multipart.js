@@ -25,7 +25,6 @@ module.exports = function(RED) {
         // 1) Process inputs to Node
         this.on("input", function(msg) {
 
-
             // Object extend
             function extend(target) {
                 var sources = [].slice.call(arguments, 1);
@@ -73,7 +72,6 @@ module.exports = function(RED) {
                     return;
                 }
 
-
                 // Add auth if it exists
                 if (this.credentials && this.credentials.user) {
                     var urlTail = url.substring(url.indexOf('://') + 3); // hacky but it works. don't judge me
@@ -84,7 +82,6 @@ module.exports = function(RED) {
                     } else {
                         url = 'http://' + username + ':' + password + '@' + urlTail;
                     }
-
 
                 }
 
@@ -113,7 +110,6 @@ module.exports = function(RED) {
                         minorEdit: 'true'
                     }
                 };
-
 
                 var thisReq = request(options, function(err, resp, body) {
                     // remove sending status
@@ -154,7 +150,6 @@ module.exports = function(RED) {
                 });
 
             }
-
 
         }); // end of on.input
 
