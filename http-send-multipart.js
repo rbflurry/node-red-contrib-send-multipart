@@ -114,6 +114,8 @@ module.exports = function(RED) {
                 var thisReq = request(options, function(err, resp, body) {
                     // remove sending status
                     node.status({});
+
+                    //Handle error
                     if (err || !resp) {
                         // node.error(RED._("httpSendMultipart.errors.no-url"), msg);
                         var statusText = "Unexpected error";
@@ -144,7 +146,6 @@ module.exports = function(RED) {
                             }
                         }
                     }
-
 
                     node.send(msg);
                 });
