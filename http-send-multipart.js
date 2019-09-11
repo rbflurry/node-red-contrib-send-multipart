@@ -136,8 +136,8 @@ module.exports = function(RED) {
                     }
                     msg.payload = body;
                     msg.statusCode = resp.statusCode || resp.status;
-                    msg.['http-send-multipart-headers'] = resp.headers;
-                    msg.['http-send-multipart-options'] = options;
+                    msg.headers = resp.headers;
+                    msg.options = options;
 
                     if (node.ret !== "bin") {
                         msg.payload = body.toString('utf8'); // txt
