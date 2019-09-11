@@ -10,10 +10,11 @@ Pulled together using some of the best of parts of other node-red-contrib nodes 
 Currently only sends files. However, there are future plans to handle other types multipart/form-data.
 
 ## Usage
-Required inputs: url (this is specified on the node) & filepath (path to the file to be sent)
-Filepath can be indicated 2 ways:
-1. Explicitly state the filepath on the node (useful if filepath is a constant)
-2. Pass the filepath into the node as part of the msg, as "msg.filepath"
+Required inputs: url & filepath
+
+Both can be indicated 2 ways:
+1. Explicitly state the input on the node (e.g. filepath and/or url is a constant)
+2. Pass the inputs into the node as part of the msg, as "msg.filepath" or "msg.url"
 
 
 ## Why this module?
