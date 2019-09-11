@@ -50,10 +50,10 @@
 	<p>Provides a node for posting multipart form-data.</p>
 	<p>The URL must be configured in the node.</p>
 	<ul>
-		<li><code>url</code>, if set, is used as the url of the request. Must start with http: or https:</li>
+		<li><code>url</code>, if set, is used as the url of the request. Must start with <em>http:</em> or <em>https:</em>. If left blank, the node will load the info from the <code>msg</code> object at <code>msg.url</code>.</li>
 		<li><code>headers</code>, if set, should be an object containing field/value pairs to be added as request headers</li>
 		<li><code>payload</code> is sent as the body of the request</li>
-    <li><code>filepath</code>, if set, will load the file from the given path, relative to the location of the NodeRed project.  If left blank, the node will look for the file in the root directory of the NodeRed project.</li>
+    <li><code>filepath</code>, if set, will load the file from the given path, relative to the location of the NodeRed project.  If left blank, the node will load the info from the <code>msg</code> object at <code>msg.filepath</code>. When both fail, the flow will fail with a warning.</li>
 	</ul>
 	<p>When configured within the node, the URL property can contain <a href="http://mustache.github.io/mustache.5.html" target="_new">mustache-style</a> tags. These allow the url to be constructed using values of the incoming message. For example, if the url
 		is set to
