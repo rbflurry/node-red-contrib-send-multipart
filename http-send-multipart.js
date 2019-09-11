@@ -95,9 +95,16 @@ module.exports = function(RED) {
                     'Content-Type': 'multipart/form-data'
                 };
                 if (msg.headers) {
-                    var headers = extend({}, headers, msg.headers);
+                    headers = extend({}, headers, msg.headers);
                 }
                 msg['request-headers'] = headers;
+
+                var fName = filepath;
+                if(n.filename) {
+                    fName = n.filename;
+                } else if (!msg.filename) {
+                    fName = msg.filename;
+                }
 
                 var options = {
                     method: 'POST',
@@ -107,7 +114,7 @@ module.exports = function(RED) {
                         file: {
                             value: fs.createReadStream(filepath),
                             options: {
-                                filename: filepath,
+                                filename: fName,
                                 contentType: null
                             }
                         },

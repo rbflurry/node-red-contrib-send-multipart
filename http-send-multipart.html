@@ -14,6 +14,11 @@
 	</div>
 
 	<div class="form-row">
+		<label for="node-input-filename"> Filename </label>
+		<input type="text" id="node-input-filename" placeholder="alternative filename">
+	</div>
+
+	<div class="form-row">
 		<input type="checkbox" id="node-input-usetls" style="display: inline-block; width: auto; vertical-align: top;">
 		<label for="node-input-usetls" style="width: auto">  Enable secure (SSL/TLS) connection </label>
 		<div id="node-row-tls" class="hide">
@@ -52,7 +57,8 @@
 		<li><code>url</code>, if set, is used as the url of the request. Must start with <em>http:</em> or <em>https:</em>. If left blank, the node will load the info from the <code>msg</code> object at <code>msg.url</code>.</li>
 		<li><code>headers</code>, if set, should be an object containing field/value pairs to be added as request headers</li>
 		<li><code>payload</code> is sent as the body of the request</li>
-    <li><code>filepath</code>, if set, will load the file from the given path, relative to the location of the NodeRed project.  If left blank, the node will load the info from the <code>msg</code> object at <code>msg.filepath</code>. When both fail, the flow will fail with a warning.</li>
+		<li><code>filepath</code>, if set, will load the file from the given path, relative to the location of the NodeRed project.  If left blank, the node will load the info from the <code>msg</code> object at <code>msg.filepath</code>. When both fail, the flow will fail with a warning.</li>
+		<li><code>filename</code>, if set, will use the value as name of the file for the upload.  If left blank, the node will use the value of <code>filename</code></li>
 	</ul>
 	<p>When configured within the node, the URL property can contain <a href="http://mustache.github.io/mustache.5.html" target="_new">mustache-style</a> tags. These allow the url to be constructed using values of the incoming message. For example, if the url
 		is set to
