@@ -11,6 +11,9 @@
 		"type": "git",
 		"url": "git+https://github.com/rbflurry/node-red-contrib-send-multipart.git"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"keywords": [
 		"node-red",
 		"multipart",
