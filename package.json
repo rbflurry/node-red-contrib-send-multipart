@@ -1,5 +1,5 @@
 {
-	"name": "@rbflurry-node-red-contrib-send-multipart",
+	"name": "@rbflurry/node-red-contrib-send-multipart",
 	"version": "0.0.1",
 	"description": "NodeRed node for posting multipart form data to external sites",
 	"scripts": {},
